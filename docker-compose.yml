@@ -1,0 +1,49 @@
+version: '3.8'
+services:
+  hangfire-server:
+    build:
+      context: ./HangfireServerApp
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+
+  db:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      SA_PASSWORD: "YourNewStrong(!)Password"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    healthcheck:
+      test: ["CMD-SHELL", "sqlcmd -S localhost -U sa -P YourNewStrong(!)Password -Q 'SELECT 1'"]
+      interval: 10s
+      retries: 3
+
+  consoleapp1:
+    build:
+      context: ./HangfireConsoleApp1
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+    depends_on:
+      - hangfire-server
+
+  consoleapp2:
+    build:
+      context: ./HangfireConsoleApp2
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+    depends_on:
+      - hangfire-server
+
+  consoleapp3:
+    build:
+      context: ./HangfireConsoleApp3
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+    depends_on:
+      - hangfire-server
+
+ 
