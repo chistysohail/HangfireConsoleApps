@@ -13,16 +13,33 @@ namespace HangfireConsoleApp1
         static void Main(string[] args)
         {
             var host = CreateHostBuilder(args).Build();
-            EnqueueJob();
-            host.Run();
+
+            // Start the Hangfire server and set JobStorage.Current
+            using (var serviceScope = host.Services.CreateScope())
+            {
+                var services = serviceScope.ServiceProvider;
+                var hangfireOptions = new BackgroundJobServerOptions();
+                var jobStorage = services.GetRequiredService<JobStorage>();
+                JobStorage.Current = jobStorage;
+
+                using (var server = new BackgroundJobServer(hangfireOptions, jobStorage))
+                {
+                    // Enqueue the job
+                    EnqueueJob();
+
+                    // Run the host
+                    host.Run();
+                }
+            }
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .ConfigureServices(services =>
+                .ConfigureServices((hostContext, services) =>
                 {
                     services.AddHangfire(configuration =>
                         configuration.UseSqlServerStorage(connectionString));
+                    services.AddHangfireServer();
                 });
 
         public static void EnqueueJob()

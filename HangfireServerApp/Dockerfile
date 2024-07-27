@@ -3,12 +3,13 @@ FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /app
 
 # Copy the project file and restore any dependencies
-COPY *.csproj ./
-RUN dotnet restore
+COPY ./HangfireServerApp/HangfireServerApp.csproj ./HangfireServerApp/
+RUN dotnet restore ./HangfireServerApp/HangfireServerApp.csproj
 
 # Copy the rest of the app and build it
-COPY . ./
-RUN dotnet publish -c Release -o out
+COPY ./HangfireServerApp/. ./HangfireServerApp/
+WORKDIR /app/HangfireServerApp
+RUN dotnet publish -c Release -o /app/out
 
 # Use the official ASP.NET Core runtime image to run the app
 FROM mcr.microsoft.com/dotnet/aspnet:6.0

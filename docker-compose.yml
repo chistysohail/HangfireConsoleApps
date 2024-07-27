@@ -1,30 +1,33 @@
 version: '3.8'
+
 services:
   hangfire-server:
     build:
-      context: ./HangfireServerApp
+      context: .
+      dockerfile: ./HangfireServerApp/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
     ports:
       - "5000:5000"
-    depends_on:
-      - db
+    # depends_on:
+    #   - db
 
-  db:
-    image: mcr.microsoft.com/mssql/server:2019-latest
-    environment:
-      SA_PASSWORD: "YourNewStrong(!)Password"
-      ACCEPT_EULA: "Y"
-    ports:
-      - "1433:1433"
-    healthcheck:
-      test: ["CMD-SHELL", "sqlcmd -S localhost -U sa -P YourNewStrong(!)Password -Q 'SELECT 1'"]
-      interval: 10s
-      retries: 3
+  # db:
+  #   image: mcr.microsoft.com/mssql/server:2019-latest
+  #   environment:
+  #     SA_PASSWORD: "YourNewStrong(!)Password"
+  #     ACCEPT_EULA: "Y"
+  #   ports:
+  #     - "1433:1433"
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "sqlcmd -S localhost -U sa -P YourNewStrong(!)Password -Q 'SELECT 1'"]
+  #     interval: 10s
+  #     retries: 3
 
   consoleapp1:
     build:
-      context: ./HangfireConsoleApp1
+      context: .
+      dockerfile: ./HangfireConsoleApp1/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
     depends_on:
@@ -32,7 +35,8 @@ services:
 
   consoleapp2:
     build:
-      context: ./HangfireConsoleApp2
+      context: .
+      dockerfile: ./HangfireConsoleApp2/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
     depends_on:
@@ -40,10 +44,13 @@ services:
 
   consoleapp3:
     build:
-      context: ./HangfireConsoleApp3
+      context: .
+      dockerfile: ./HangfireConsoleApp3/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
     depends_on:
       - hangfire-server
 
- 
+networks:
+  hangfire-net:
+    driver: bridge

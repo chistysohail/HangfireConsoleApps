@@ -8,8 +8,8 @@ namespace JobProcessorLib
 {
     public class JobProcessor
     {
-        private static readonly string connectionString = "Server=host.docker.internal,1434;Database=JobQueueDB;User Id=sa;Password=YourNewStrong(!)Password;MultipleActiveResultSets=true;TrustServerCertificate=True;Connection Timeout=30;";
-
+        private static readonly string connectionString = "Server=host.docker.internal,1434;Database=HangfireApps;User Id=sa;Password=YourNewStrong(!)Password;MultipleActiveResultSets=true;TrustServerCertificate=True;Connection Timeout=30;";
+        //private static readonly string connectionString = "Server=(localdb)\\MSSQLLocalDB;Database=HangfireApps;Integrated Security=True;";
         [AutomaticRetry(Attempts = 3)]
         public static void ProcessJob(int jobId, string workerName)
         {
