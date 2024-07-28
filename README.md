@@ -80,3 +80,4 @@ This project is licensed under the MIT License. See the LICENSE file for details
 This `README.md` file now includes details about the MS SQL Server database connection, the connection string, and the SQL script to create the necessary database and tables. You can further customize it as needed.
 
 ![image](https://github.com/user-attachments/assets/cb39b9e3-c976-4b2b-976d-7af0aa200986)
+![image](https://github.com/user-attachments/assets/f206f425-0abc-4d86-beae-446c116f46e0)
