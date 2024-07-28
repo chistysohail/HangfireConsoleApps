@@ -44,9 +44,12 @@ Run the following SQL script to create the database, tables, and insert initial 
 CREATE DATABASE HangfireApps;
 
 -- Use the database
+
 USE HangfireApps;
 
+
 -- Create the Jobs table
+
 CREATE TABLE Jobs (
     JobId INT PRIMARY KEY IDENTITY(1,1),
     Status NVARCHAR(50) NOT NULL,
@@ -54,7 +57,9 @@ CREATE TABLE Jobs (
     CreatedAt DATETIME NOT NULL
 );
 
+
 -- Insert initial data
+
 INSERT INTO Jobs (Status, CreatedAt) VALUES ('Pending', GETDATE());
 INSERT INTO Jobs (Status, CreatedAt) VALUES ('Pending', GETDATE());
 INSERT INTO Jobs (Status, CreatedAt) VALUES ('Pending', GETDATE());
