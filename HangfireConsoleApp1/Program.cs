@@ -18,8 +18,11 @@ namespace HangfireConsoleApp1
             var jobStorage = new SqlServerStorage(connectionString);
             JobStorage.Current = jobStorage;
 
-            // Enqueue the job
+            // Enqueue the initial job
             EnqueueJob();
+
+            // Schedule recurring job
+            RecurringJob.AddOrUpdate("recurring-job", () => JobProcessorLib.JobProcessor.ProcessJob(1, Environment.MachineName), "*/5 * * * *");
 
             // Run the host
             host.Run();
