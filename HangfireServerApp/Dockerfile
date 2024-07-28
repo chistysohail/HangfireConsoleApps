@@ -2,11 +2,13 @@
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /app
 
-# Copy the project file and restore any dependencies
+# Copy the project files and restore any dependencies
+COPY ./JobProcessorLib/JobProcessorLib.csproj ./JobProcessorLib/
 COPY ./HangfireServerApp/HangfireServerApp.csproj ./HangfireServerApp/
 RUN dotnet restore ./HangfireServerApp/HangfireServerApp.csproj
 
 # Copy the rest of the app and build it
+COPY ./JobProcessorLib/. ./JobProcessorLib/
 COPY ./HangfireServerApp/. ./HangfireServerApp/
 WORKDIR /app/HangfireServerApp
 RUN dotnet publish -c Release -o /app/out
@@ -22,6 +24,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=build /app/out .
+COPY --from=build /app/JobProcessorLib /app/JobProcessorLib
 
 # Entry point for the application
 ENTRYPOINT ["dotnet", "HangfireServerApp.dll"]

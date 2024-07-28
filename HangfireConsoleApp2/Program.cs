@@ -14,19 +14,15 @@ namespace HangfireConsoleApp2
         {
             var host = CreateHostBuilder(args).Build();
 
-            // Enqueue job after Hangfire has been initialized
-            using (var serviceScope = host.Services.CreateScope())
-            {
-                var services = serviceScope.ServiceProvider;
-                var jobStorage = services.GetRequiredService<JobStorage>();
-                JobStorage.Current = jobStorage;
+            // Set JobStorage.Current
+            var jobStorage = new SqlServerStorage(connectionString);
+            JobStorage.Current = jobStorage;
 
-                using (var server = new BackgroundJobServer(new BackgroundJobServerOptions(), jobStorage))
-                {
-                    EnqueueJob();
-                    host.Run();
-                }
-            }
+            // Enqueue the job
+            EnqueueJob();
+
+            // Run the host
+            host.Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
@@ -35,7 +31,6 @@ namespace HangfireConsoleApp2
                 {
                     services.AddHangfire(configuration =>
                         configuration.UseSqlServerStorage(connectionString));
-                    services.AddHangfireServer();
                 });
 
         public static void EnqueueJob()

@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Hangfire.Dashboard;
+using Hangfire.Dashboard.BasicAuthorization;
 
 namespace HangfireServerApp
 {
@@ -31,7 +33,28 @@ namespace HangfireServerApp
 
                     webBuilder.Configure(app =>
                     {
-                        app.UseHangfireDashboard();
+                        var options = new DashboardOptions
+                        {
+                            Authorization = new[]
+                            {
+                                new BasicAuthAuthorizationFilter(new BasicAuthAuthorizationFilterOptions
+                                {
+                                    RequireSsl = false,
+                                    SslRedirect = false,
+                                    LoginCaseSensitive = true,
+                                    Users = new[]
+                                    {
+                                        new BasicAuthAuthorizationUser
+                                        {
+                                            Login = "admin",
+                                            PasswordClear = "password"
+                                        }
+                                    }
+                                })
+                            }
+                        };
+
+                        app.UseHangfireDashboard("/hangfire", options);
                         app.UseRouting();
                         app.UseEndpoints(endpoints =>
                         {
