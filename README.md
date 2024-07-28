@@ -40,7 +40,9 @@ All projects connect to an MS SQL Server database running in a separate Docker c
 Server=host.docker.internal,1434;Database=HangfireApps;User Id=sa;Password=YourNewStrong(!)Password;MultipleActiveResultSets=true;TrustServerCertificate=True;Connection Timeout=30;
 
 Run the following SQL script to create the database, tables, and insert initial data.
+
 -- Create the database
+
 CREATE DATABASE HangfireApps;
 
 -- Use the database
