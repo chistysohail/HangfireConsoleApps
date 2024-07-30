@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "HangfireConsoleApp2": {
+    "HangfireConsoleApp3": {
       "commandName": "Project",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
