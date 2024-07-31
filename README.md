@@ -81,3 +81,39 @@ This `README.md` file now includes details about the MS SQL Server database conn
 
 ![image](https://github.com/user-attachments/assets/cb39b9e3-c976-4b2b-976d-7af0aa200986)
 ![image](https://github.com/user-attachments/assets/f206f425-0abc-4d86-beae-446c116f46e0)
+
+sql scripts used in testing:
+/*
+CREATE TABLE Jobs (
+    JobId INT IDENTITY(1,1) PRIMARY KEY,
+    Status NVARCHAR(50),
+    ProcessedBy NVARCHAR(100),
+    CreatedAt DATETIME DEFAULT GETDATE()
+);
+
+
+INSERT INTO Jobs (Status, ProcessedBy)
+VALUES 
+    ('Pending', NULL),
+    ('Pending', NULL),
+    ('Pending', NULL),
+    ('Pending', NULL),
+    ('Pending', NULL);
+	*/
+
+	select * from Jobs
+	--delete from Jobs
+	--drop Table Jobs
+
+	/*
+
+DECLARE @sql NVARCHAR(MAX) = N'';
+-- Generate DROP TABLE statements for all tables in the HangFire schema
+SELECT @sql += N'DROP TABLE HangFire.' + QUOTENAME(name) + ';'
+FROM sys.tables
+WHERE schema_id = SCHEMA_ID('HangFire');
+
+-- Execute the generated SQL statements
+EXEC sp_executesql @sql;
+
+*/
