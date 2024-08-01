@@ -117,3 +117,24 @@ WHERE schema_id = SCHEMA_ID('HangFire');
 EXEC sp_executesql @sql;
 
 */
+
+if cmd "docker compose up --build" not working try :
+# Build the Docker images
+docker build -t hangfire-server -f ./HangfireServerApp/Dockerfile .
+docker build -t consoleapp1 -f ./HangfireConsoleApp1/Dockerfile .
+docker build -t consoleapp2 -f ./HangfireConsoleApp2/Dockerfile .
+docker build -t consoleapp3 -f ./HangfireConsoleApp3/Dockerfile .
+
+# Create a custom network
+docker network create hangfire-net
+
+# Run the Docker containers
+docker run -d --name hangfire-server --network hangfire-net -e ASPNETCORE_ENVIRONMENT=Production -p 5000:80 hangfire-server
+docker run -d --name consoleapp1 --network hangfire-net -e ASPNETCORE_ENVIRONMENT=Production --link hangfire-server consoleapp1
+docker run -d --name consoleapp2 --network hangfire-net -e ASPNETCORE_ENVIRONMENT=Production --link hangfire-server consoleapp2
+docker run -d --name consoleapp3 --network hangfire-net -e ASPNETCORE_ENVIRONMENT=Production --link hangfire-server consoleapp3
+
+# Stop and remove the containers
+docker stop hangfire-server consoleapp1 consoleapp2 consoleapp3
+docker rm hangfire-server consoleapp1 consoleapp2 consoleapp3
+
